@@ -2,6 +2,7 @@ var font;
 var fontSize = 12;
 var margin = 50;
 var bgColor = 20;
+var xoff = 0.0;
 
 var w;
 
@@ -20,7 +21,7 @@ function draw() {
 
 	w.display();
 	w.move();
-
+	xoff += 0.02;
 
 	// INTERFACE ELEMENTS
 	fill(255);
@@ -47,8 +48,9 @@ function draw() {
 
 function Walker(){
 
-	this.diam = 10;
-	this.pos = createVector(width/2, height/2);
+	this.diam = noise(xoff) * 100;
+	this.pos = createVector(random(width), random(height));
+	this.pos2 = createVector(random(width), random(height));
 	this.vel = createVector(0,0);
 	this.acc = p5.Vector.fromAngle(random(TWO_PI));
 
@@ -56,7 +58,9 @@ function Walker(){
 	this.display = function() {
 		stroke(255);
 		noFill();
+		this.diam = noise(xoff) * 100;
 		ellipse(this.pos.x, this.pos.y, this.diam, this.diam);
+		// line(this.pos.x, this.pos.y, this.pos2.x - this.diam, this.pos2.y - this.diam);
 	}
 
 	this.move = function() {
@@ -70,14 +74,16 @@ function Walker(){
 		// this.acc.rotate(0.4);
 		this.vel.add(this.acc);
 		this.pos.add(this.vel);
+		this.pos2.add(this.vel);
 
 
-		// Calculate the vector from the position to the mouseX
+
+		// // Calculate the vector from the position to the mouseX
 	  // this.acc = p5.Vector.sub(mouse, this.pos);
-		// Any vector is normalized to 1
+		// // Any vector is normalized to 1
 		// this.acc.normalize();
-		// Scale it down
-		// this.acc.mult(0.4);
+		// // Scale it down
+		// this.acc.mult(0.2);
 
 		// Can be shorted as:
 
