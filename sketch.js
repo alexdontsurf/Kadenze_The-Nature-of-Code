@@ -2,8 +2,9 @@ var font;
 var fontSize = 12;
 var margin = 50;
 var bgColor = 20;
+var xoff = 0.0;
 
-var w;
+var p1, p2;
 
 function preload() {
 	font = loadFont('assets/IBMPlexMono-Regular.ttf');
@@ -11,87 +12,97 @@ function preload() {
 
 function setup() {
 	createCanvas(windowWidth, windowHeight);
-	w = new Walker();
-	background(bgColor);
+	// background(bgColor);
+
+	p1 = new Particle(width/3, height/4, 2);
+	p2 = new Particle(width - width/3, height/4, 5);
 }
 
 function draw() {
+	background(bgColor);
+
+	p1.display();
+	p2.display();
+
+	p1.update();
+	p2.update();
+
+	p1.edges();
+	p2.edges();
+
+	var wind = createVector(0.5,0);
+
+	var gravity1 = createVector(0, (0.2 * this.p1.mass));
+	p1.applyForce(gravity1);
+	var gravity2 = createVector(0, 0.2 * this.p2.mass);
+	p2.applyForce(gravity2);
 
 
-	w.display();
-	w.move();
 
+	if (mouseIsPressed) {
+			p1.applyForce(wind);
+			p2.applyForce(wind);
+	}
 
 	// INTERFACE ELEMENTS
-	fill(255);
-	noStroke();
+	noFill();
+	stroke(255);
 	textFont(font);
 	textSize(fontSize);
 	text('THE NATURE OF CODE', margin, margin);
-	text('Lesson 9', margin, margin * 1.5);
-	text('mouseX: ' + mouseX, margin, windowHeight - margin * 1.4);
-	text('mouseY: ' + mouseY, margin, windowHeight - margin);
+	text('Session 2 Lessons 5', margin, margin * 1.5);
+	text('v1: ' + p1.acc, margin, windowHeight - margin * 1.4);
+	text('acc1: ' + p2.acc, margin, windowHeight - margin);
 	textAlign(LEFT);
-
-	// COOL CURSOR
-	// noCursor();
-	// stroke(255);
-	// line(mouseX,0,mouseX,height);
-	// line(0,mouseY, width, mouseY);
-	// rectMode(CENTER);
-	// fill(bgColor);
-	// rect(mouseX, mouseY, 5, 5);
-
 }
 
 
-function Walker(){
+function Particle(x, y, mass){
 
-	this.diam = 10;
-	this.pos = createVector(width/2, height/2);
-	this.vel = createVector(0,0);
-	this.acc = p5.Vector.fromAngle(random(TWO_PI));
+	this.pos = createVector(x, y);
+	this.vel = createVector(0, 0);
 
+	this.acc = createVector(0, 0);
+	this.mass = mass;
+	this.diam = this.mass * 10;
 
-	this.display = function() {
-		stroke(255);
-		noFill();
+	this.display = function(){
 		ellipse(this.pos.x, this.pos.y, this.diam, this.diam);
 	}
 
-	this.move = function() {
-		var mouse = createVector(mouseX, mouseY);
-
-		// 2 WAYS OF OPERATING WITH VECTORS
-		// Substract from that vector mouse.sub(this.pos);
-		// Subtract from two vector and store in new variable this.acc = p5.Vector.sub(mouse, this.pos);
-		// p = p + v; v = v + a; a = a + m
-
-		// this.acc.rotate(0.4);
+	this.update = function(){
 		this.vel.add(this.acc);
 		this.pos.add(this.vel);
 
-
-		// Calculate the vector from the position to the mouseX
-	  // this.acc = p5.Vector.sub(mouse, this.pos);
-		// Any vector is normalized to 1
-		// this.acc.normalize();
-		// Scale it down
-		// this.acc.mult(0.4);
-
-		// Can be shorted as:
-
-
-		// Soft random walk
-		// this.acc = createVector(random(-1,1), random(-1,1));
-		// this.acc.mult(.4);
-
-		//Random walk from an angle
-		this.acc = p5.Vector.fromAngle(random(TWO_PI));
-		this.acc.setMag(0.4);
-
+		// acc must be 0 at in order to not acumulate
+		this.acc.set(0,0);
 	}
 
+	// Newton 2LAW F = m * a
+	this.applyForce = function(force) {
+		// Instead of set several forces such as gravity and wind acc must be add in order to not overwritten acc
 
+		// need to copy on other variable in order to  always apply the original force to every object, not the reduced by mass one.
+		var fCopy = force.copy();
+		// a = F / m
+		fCopy.div(this.mass);
+		this.acc.add(fCopy);
+	}
 
+	this.edges = function() {
+		if(this.pos.y + this.diam/2 > height) {
+			this.vel.y *= -1;
+			this.pos.y = height - this.diam/2;
+		}
+
+		if(this.pos.x + this.diam/2 > width) {
+			this.vel.x *= -1;
+			this.pos.x = width - this.diam/2;
+		}
+
+		if(this.pos.x - this.diam/2 < 0) {
+			this.vel.x *= -1;
+			this.pos.x = 0 + this.diam/2;
+		}
+	}
 }
