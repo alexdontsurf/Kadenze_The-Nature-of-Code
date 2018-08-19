@@ -1,13 +1,15 @@
 var Particle = function(x, y, mass){
 
 	this.pos = createVector(x, y);
-	this.vel = createVector(1, 0);
+	this.vel = createVector(-0.8, 0.6);
 
 	this.acc = createVector(0, 0);
 	this.mass = mass;
 	this.diam = this.mass * 10;
 
 	this.display = function(){
+		fill(255,125);
+		noStroke();
 		ellipse(this.pos.x, this.pos.y, this.diam, this.diam);
 	}
 
@@ -36,6 +38,11 @@ var Particle = function(x, y, mass){
 			this.pos.y = height - this.diam/2;
 		}
 
+		if(this.pos.y - this.diam/2 < 0) {
+			this.vel.y *= -1;
+			this.pos.y = 0 + this.diam/2;
+		}
+
 		if(this.pos.x + this.diam/2 > width) {
 			this.vel.x *= -1;
 			this.pos.x = width - this.diam/2;
@@ -46,4 +53,9 @@ var Particle = function(x, y, mass){
 			this.pos.x = 0 + this.diam/2;
 		}
 	}
+
+	// Cuando pasa por un anillo suena un sonido
+	// this.sounds = function() {
+	// 	if(this.pos)
+	// }
 }

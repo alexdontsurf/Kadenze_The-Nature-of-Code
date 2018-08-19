@@ -1,11 +1,18 @@
 
-var Attractor = function(x, y, mass){
-	this.pos = createVector(x, y);
+var Attractor = function(mass){
+
 	this.G = 1;
 	this.diam = mass * 10;
 
 	this.display = function() {
-		ellipse(x, y, this.diam, this.diam);
+		this.pos = createVector(mouseX, mouseY);
+		noFill();
+		stroke(255,100);
+		// for (var i = 0; i < 10; i++) {
+		// 	ellipse(x, y, this.diam * i + 10, this.diam * i +10);
+		// }
+
+		ellipse(this.pos.x, this.pos.y, this.diam, this.diam);
 	}
 
 	this.calculateAttraction = function(p){
