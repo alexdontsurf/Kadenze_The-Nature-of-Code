@@ -5,7 +5,7 @@ var Attractor = function(mass){
 	this.diam = mass * 10;
 
 	this.display = function() {
-		this.pos = createVector(mouseX, mouseY);
+		this.pos = createVector(width/2, height/2);
 		noFill();
 		stroke(255,100);
 		// for (var i = 0; i < 10; i++) {

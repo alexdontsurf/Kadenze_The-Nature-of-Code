@@ -56,13 +56,13 @@ function draw() {
 
 
 	// INTERFACE ELEMENTS
-	noFill();
-	stroke(255);
+	fill(255);
+	noStroke();
 	textFont(font);
 	textSize(fontSize);
 	text('THE NATURE OF CODE', margin, margin);
 	text('Session 2 Lessons ', margin, margin * 1.5);
-	text('v1: ' , margin, windowHeight - margin * 1.4);
-	text('acc1: ', margin, windowHeight - margin);
+	text('particles: ' + particles.length , margin, windowHeight - margin * 1.4);
+	text('frame rate: ' + frameCount, margin, windowHeight - margin);
 	textAlign(LEFT);
 }
