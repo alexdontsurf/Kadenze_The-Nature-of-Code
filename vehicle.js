@@ -13,8 +13,15 @@ class Vehicle{
 	seek(target) {
 		var desired = p5.Vector.sub(target, this.pos);
 
-    // The seek behavior!
-    desired.setMag(this.maxSpeed);
+		var d = desired.mag()
+
+		// The seek behavior!
+		if ( d < 100) {
+			var ms = map(d, 0, 100, 0, this.maxSpeed);
+			desired.setMag(ms);
+		} else {
+	    desired.setMag(this.maxSpeed);
+		}
 
 		// Steering formula
 		var steering = p5.Vector.sub(desired, this.vel);
@@ -52,7 +59,7 @@ class Vehicle{
 		vertex(-this.diam , this.diam);
 		vertex(this.diam , this.diam);
 		endShape(CLOSE);
-		
+
 	}
 
 
